@@ -1,0 +1,12 @@
+amqp==2.3.2
+billiard==3.5.0.3
+cx-Oracle==6.3.1
+Django==2.0.6
+django-widget-tweaks==1.4.2
+kombu==4.2.1
+numpy==1.14.4
+pandas==0.23.0
+python-dateutil==2.7.3
+pytz==2018.4
+six==1.11.0
+vine==1.1.4

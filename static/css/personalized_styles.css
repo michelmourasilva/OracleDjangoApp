@@ -1,0 +1,85 @@
+input.v_csv_splitter{
+  width:133px;
+}
+
+input.v_sql_loader_splitter{
+  width:133px;
+}
+
+input.v_sql_query{
+  width:538px;
+}
+
+input.v_sql_file{
+  width:538px;
+}
+
+input.v_path_export{
+  width:538px;
+}
+
+input.lst_file_export{
+  width:538px;
+}
+
+input.v_sql_loader_table{
+  width:180px;
+}
+
+input.v_sql_loader_constants{
+  width:180px;
+}
+
+.bmd-modalContent iframe{
+  display:block;
+  margin:auto;
+}
+
+.bmd-modalContent.close:hover, .bmd-modalContent.close:focus{
+  opacity:1;
+  outline:none;
+}
+
+.bmd-modalContent .close span{
+  display:block;
+}
+
+.bmd-modalContent .close{
+  font-size:30px;
+  line-height:30px;
+  padding:7px 4px 7px 13px;
+  text-shadow:none;
+  opacity:.7;
+  color:#fff;
+}
+
+.bmd-modalContent{
+  box-shadow:none;
+  background-color:transparent;
+  border:0;
+}
+
+.close-button{
+  overflow:hidden;
+}
+
+.bmd-modalButton{
+  display:block;
+  margin:15px auto;
+  padding:5px 15px;
+}
+
+.nav-tabs.centered > li, .nav-pills.centered > li{
+  float:none;
+  display:inline-block;
+  *display:inline;
+  zoom:1;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.element {
+  @include invisible;
+}

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/personalized_styles.css'%}">
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/functions.js'%}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Return</title>
+</head>
+<body>
+    {% if v_return.0 == 0 %}
+        <div class='alert alert-success' role='alert'>
+        <h4 class='alert-heading'>Sucess -  {{ v_return.1 }}</h4>
+        <p>{{ v_return.2 }}</p>
+        {% elif v_mensage_type == 1 %}
+        <div class='alert alert-danger' role='alert'>
+        <h4 class='alert-heading'>Erro - {{ v_return.1 }}</h4>
+        {% endif %}
+        <p class='mb-0'></p>
+        </div>
+</body>
+</html>

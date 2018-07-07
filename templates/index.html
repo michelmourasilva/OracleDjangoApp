@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/personalized_styles.css'%}">
+
+</head>
+<body>
+   <form name="Oracle">
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <legend>Oracle Information</legend>
+            </div>
+            <div class="col-sm-8">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label data-toggle="tooltip" title="Oracle User" data-placement="top">User</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="input-sm" type="text" required="" id="v_oracle_user" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Password </label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="input-sm colunas_finais" type="password" required="" id="v_oracle_password" values="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <legend>Servers</legend>
+            </div>
+            <div class="col-sm-8">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+
+                                {% for servers in lst_servers.0  %}
+                                    <div class="checkbox">
+                                    <label class="control-label">
+                                    <input type="checkbox" name="lst_servers"  value="{{ servers }}"> {{ servers }}</label>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                {% for servers in lst_servers.1  %}
+                                    <div class="checkbox">
+                                    <label class="control-label">
+                                    <input type="checkbox" name="lst_servers"  value="{{ servers }}"> {{ servers }}</label>
+                                    </div>
+                                {% endfor %}
+                                <input type="checkbox" name="lst_servers"  value="VOID" checked="true" style="opacity:0;">
+                            </div>
+                        </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div>
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#tab-1" role="tab" data-toggle="tab">Execute .SQL file</a></li>
+            <li><a href="#tab-2" role="tab" data-toggle="tab">Export query to .csv</a></li>
+            <li><a href="#tab-3" role="tab" data-toggle="tab">Import File</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" role="tabpanel" id="tab-1">
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>SQL file path</legend>
+                        </div>
+                        <div class="col-md-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <input class="input-sm v_sql_file" type="text" name="v_sql_file" id="v_sql_file" value="" title="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <p class="text-left">
+
+                                             <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-bmdsrc="1" data-bmdwidth="500" data-bmdheight="281" data-target="#myModal" onclick="ChangeSource(1);">Execute script</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="tab-2">
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>Column splitter</legend>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="input-sm v_csv_splitter" type="text" value=";" maxlength="3" id="v_csv_splitter">
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>SQL Query</legend>
+                        </div>
+                        <div class="col-md-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="form-group">
+                                            <textarea class="input-sm v_sql_query" rows="10" cols="83" id="v_sql_query"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <legend>Destination path</legend>
+                        </div>
+                        <div class="col-md-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="form-group">
+                                            <input class="input-sm v_path_export" type="text" id="v_path_export">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <p class="text-left">
+                                            <button class="btn btn-default btn-lg" type="button" data-toggle="modal" data-bmdsrc="0" data-bmdwidth="500" data-bmdheight="281" data-target="#myModal" >Export result</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="tab-3">
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>File to import</legend>
+                        </div>
+                        <div class="col-md-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <input class="input-sm lst_file_import" type="text" id="lst_file_import">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>Column splitter </legend>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="input-sm v_sql_loader_splitter" type="text" value=";" maxlength="3" id="v_sql_loader_splitter">
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>Destination </legend>
+                        </div>
+                        <div class="col-sm-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Owner </label>
+                                            </div>
+                                            <div>
+                                                <input class="input-sm" type="text" required="" id="v_sql_loader_owner">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label>Table </label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="input-sm v_sql_loader_table" type="text" required="" id="v_sql_loader_table">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <legend>SQLLoader parameters</legend>
+                        </div>
+                        <div class="col-sm-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Columns </label>
+                                            </div>
+                                            <div>
+                                                <input class="input-sm" type="text" required="" id="v_sql_loader_head" title="Split columns with semmicolon Ex: Field1,Field2,Field3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label>Constants </label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="input-sm v_sql_loader_constants" type="text" required="" id="v_sql_loader_constants">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-8">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <p class="text-left">
+                                            <button class="btn btn-default btn-lg" type="button" data-toggle="modal" data-bmdsrc="2" data-bmdwidth="500" data-bmdheight="281" data-target="#myModal">Import file</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <footer>
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content bmd-modalContent">
+
+				<div class="modal-body">
+
+          <div class="close-button">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="embed-responsive embed-responsive-16by9">
+					            <iframe class="embed-responsive-item" frameborder="0"></iframe>
+          </div>
+				</div>
+
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+      </footer>
+       <script src="{% static 'js/jquery.min.js'%}"></script>
+       <script src="{% static 'js/Util.js'%}"></script>
+              <script src="{% static 'js/Modal.js'%}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+   </form>
+</body>
+
+</html>
