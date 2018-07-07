@@ -6,26 +6,19 @@ import pandas as pd
 import cx_Oracle
 import os
 import threading
+from datetime import datetime
+
 
 #python -m pdb manage.py runserver
 # import pdb;
 # pdb.set_trace()
 
 
-class ClsData(View):
-    def __init__(self):
-        self.v_data = time.strftime("%Y-%m-%d %H:%M:%S").replace('-', '')[:8]
-        self.v_complete_data_number = time.strftime("%Y-%m-%d %H:%M:%S").replace('-', '').replace(':', '').replace(' '
-                                       , '')
-        self.v_complete_data_string = time.strftime("%Y-%m-%d %H:%M:%S")
-
-
-class ClsForm(ClsData):
-    def __init__(self, v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file, v_csv_splitter,
-                 v_sql_query, v_path_export
-                 , lst_file_import, v_export_engine, v_sql_loader_splitter, v_sql_loader_owner, v_sql_loader_table,
-                 v_sql_loader_head, v_sql_loader_constants):
-        ClsData.__init__()
+class ClsForm(View):
+    def __init__(self, v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file, v_csv_splitter, v_sql_query,
+                 v_path_export, lst_file_import, v_export_engine, v_sql_loader_splitter, v_sql_loader_owner,
+                 v_sql_loader_table, v_sql_loader_head, v_sql_loader_constants, **kwargs):
+        super().__init__(**kwargs)
         self.v_oracle_user = v_oracle_user
         self.v_oracle_password = v_oracle_password
         self.lst_servers = lst_servers
@@ -41,17 +34,9 @@ class ClsForm(ClsData):
         self.v_sql_loader_table = v_sql_loader_table
         self.v_sql_loader_head = v_sql_loader_head
         self.v_sql_loader_constants = v_sql_loader_constants
-
-
-class ClsInit(ClsForm):
-    def __init__(self, v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file, v_csv_splitter,
-                 v_sql_query, v_path_export
-                 , lst_file_import, v_export_engine, v_sql_loader_splitter, v_sql_loader_owner, v_sql_loader_table,
-                 v_sql_loader_head, v_sql_loader_constants):
-        ClsForm.__init__(self, v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file,
-                         v_csv_splitter, v_sql_query, v_path_export
-                         , lst_file_import, v_export_engine, v_sql_loader_splitter, v_sql_loader_owner,
-                         v_sql_loader_table, v_sql_loader_head, v_sql_loader_constants)
+        self.v_data = returndatetime()[0]
+        self.v_complete_data_number = returndatetime()[1]
+        self.v_complete_data_string = returndatetime()[2]
 
     def fnc_generate_connection_string(self, p_server):
         v_connection_string = '{0}/{1}@{2}'.format(self.v_oracle_user, self.v_oracle_password, p_server)
@@ -69,12 +54,9 @@ class ClsInit(ClsForm):
                     v_session_terminal.stdin.write(v_sql_file.encode('utf-8'))
                     v_session_terminal_output, v_session_terminal_error = v_session_terminal.communicate()
                     v_session_terminal_output = v_session_terminal_output.decode('utf-8', errors="ignore")
-                    ## Integration with INEP.demandas ------------------------------------
-                    ## v_nu_demanda = re.findall(r'[0-9]{6}', v_sql_file)[0]
-                    ## v_descricao_demanda = self.fnc_monta_cabecalho(rgs_servers, v_nu_demanda)
                     v_description_demands = ''
                     v_method_output = v_description_demands + v_session_terminal_output
-                    v_file_name = fnc_generate_log(v_method_output, v_sql_file, rgs_servers)
+                    fnc_generate_log(v_method_output, v_sql_file, rgs_servers)
             return 0, 'fnc_execute_sql_file', 'Process executed successfully.', None
         except Exception as e:
             return 1, 'fnc_execute_sql_file', e, None
@@ -242,7 +224,7 @@ def request_form(request):
     v_sql_loader_head = request.GET.get('v_sql_loader_head')
     v_sql_loader_constants = request.GET.get('v_sql_loader_constants')
 
-    interface_cls_init = ClsInit(v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file, v_csv_splitter,
+    interface_cls_init = ClsForm(v_oracle_user, v_oracle_password, lst_servers, v_action, v_sql_file, v_csv_splitter,
                                  v_sql_query, v_path_export, lst_file_import, v_export_engine, v_sql_loader_splitter,
                                  v_sql_loader_owner, v_sql_loader_table,
                                  v_sql_loader_head, v_sql_loader_constants)
@@ -261,3 +243,42 @@ def request_form(request):
 
 def show_index(request):
     return render(request, 'index.html', {'lst_servers': show_object_servers(2)})
+
+
+def date2iso(complete_date):
+    """
+    Method that format a string date in a date with format ISO 8601
+    :param complete_date: Date string in format "YYYY-MM-DD HH24:MI:SS"
+    :return: Iso date in format  ISO 8601: YYYY-MM-DDThh:mm:ss.sTZD
+    """
+    strdate = complete_date.strftime("%Y-%m-%dT%H:%M:%S.000")
+    minute = (time.localtime().tm_gmtoff / 60) % 60
+    hour = ((time.localtime().tm_gmtoff / 60) - minute) / 60
+    utcoffset = "%.2d%.2d" %(hour, minute)
+    if utcoffset[0] != '-':
+        utcoffset = '+' + utcoffset
+    return strdate + utcoffset
+
+
+def returndatetime(datestring=None):
+    """
+    Method that return four formats of datetime.
+    :param datestring:  Date string in format "YYYY-MM-DD HH24:MI:SS"
+    :return: List with four formats of date. "%Y%m%d", "%Y%m%d%H%M%S", "%Y-%m-%d %H:%M:%S" and ISO8601
+    """
+    if datestring is None:
+        date_ymd = datetime.today().strftime("%Y%m%d")
+        date_ymdhms = datetime.today().strftime("%Y%m%d%H%M%S")
+        date_complete = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        data_iso9061 = date2iso(datetime.today())
+        return date_ymd, date_ymdhms, date_complete, data_iso9061
+    else:
+        try:
+            datestring = datetime.strptime(datestring,'%Y-%m-%d %H:%M:%S')
+            date_ymd = datestring.strftime("%Y%m%d")
+            date_ymdhms = datestring.strftime("%Y%m%d%H%M%S")
+            date_complete = datestring.strftime("%Y-%m-%d %H:%M:%S")
+            data_iso9061 = date2iso(datestring)
+            return date_ymd, date_ymdhms, date_complete, data_iso9061
+        except Exception as e:
+            return None, None, None, None
